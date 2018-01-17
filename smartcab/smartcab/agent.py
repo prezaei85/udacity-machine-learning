@@ -1,5 +1,6 @@
 import random
 import math
+import numpy
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
@@ -44,9 +45,9 @@ class LearningAgent(Agent):
         	self.epsilon = 0
         	self.alpha = 0
         else:
-        	# self.epsilon -= 0.05
+        	# self.epsilon -= 0.01
         	# self.epsilon = 0.75 ** self.trials
-        	self.epsilon = 0.5 * (1 + math.cos(0.1 * self.trials))
+        	self.epsilon = 0.5 * (1 + math.cos(0.02 * self.trials))
         	self.trials += 1
 
 
@@ -72,7 +73,10 @@ class LearningAgent(Agent):
         # With the hand-engineered features, this learning process gets entirely negated.
         
         # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs['light'], inputs['oncoming'])
+        if self.learning:
+        	state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'])
+        else:
+        	state = None
 
         return state
 
@@ -85,10 +89,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-    	actions = self.Q[state]
-        max_q = max(actions.keys(), key = actions.get)
-        all_max = [k for k, v in actions.iteritems() if abs(v - actions[max_q]) < 1E-6]
-        maxQ = random.choice(all_max) # choose randomly between the ties
+        maxQ = max(self.Q[state].values())
         
         return maxQ 
 
@@ -135,7 +136,7 @@ class LearningAgent(Agent):
         	if x < self.epsilon:
         		action = random.choice(self.valid_actions)
         	else:
-        		action = self.get_maxQ(state)
+        		action = random.choice([k for k, v in self.Q[state].iteritems() if numpy.isclose(v, self.get_maxQ(state))]) 
 
         return action
 
@@ -150,7 +151,8 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        self.Q[state][action] = (1 - self.alpha)*self.Q[state][action] + self.alpha * reward
+        if self.learning:
+        	self.Q[state][action] = (1 - self.alpha)*self.Q[state][action] + self.alpha * reward
 
         return
 
@@ -209,7 +211,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test = 10, tolerance = 0.001)
+    sim.run(n_test = 100, tolerance = 0.001)
 
 
 if __name__ == '__main__':
