@@ -13116,8 +13116,9 @@ SpxgmZmZmZmZVYkTLDMzMzMzsypxgmVmZmZmZlYlTrDMzMzMzMyqxAmWmZmZmZlZlfx/f2ZF1xDC
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong> waypoint is an absolute necessity for the smartcab to know the direction of the destination, and to ultimately get there.</p>
-<p>From inputs, light is again necessary to make sure that the smartcab moves at the right time and does not cause accidents. The intended direction of travel for other cars is important for the oncoming traffic and the cars coming from the left. The oncoming cars are allowed to move at the same time with the smartcab and their direction might interfere with the smartcab. If the smartcab wants to turn left and the oncoming car wants to turn right or go straight, that can cause an accident. The direction of cars on the left is mportant as if they have a green light and the smartcab has a red light, it can still move to the right as long as the car on the left does not want to go straight.</p>
-<p>Lastly, deadline does not seem to help the smartcab with either reliability or safety. Therefore, in the end, I chose these states for the Q-learning problem: waypoint, inputs['light'], inputs['oncoming'] and inputs['left'].</p>
+<p>From inputs, light is again necessary to make sure that the smartcab moves at the right time and does not cause accidents. The intended direction of travel for other cars is important for the oncoming traffic and the cars coming from the left. The oncoming cars are allowed to move at the same time with the smartcab and their direction might interfere with the smartcab. If the smartcab wants to turn left and the oncoming car wants to turn right or go straight, that can cause an accident. The direction of cars on the left is mportant as if they have a green light and the smartcab has a red light, it can still move to the right as long as the car on the left does not want to go straight. The direction of cars on the right is not important because if the smartcab has a green light it will have the right of way and it can move freely to any direction. If the smartcab is behind a red light, the cars on the right coming to the crossroad will have a green light, and will have the right of way, so again their moving direction does not impact the smartcab.</p>
+<p>Lastly, deadline does not seem to help the smartcab with either reliability or safety, because the smartcab is already rewarded more heavily if it is moving in the waypoint direction. Knowing how much time it has left does not impact in its decision in what action to choose. In other words, the reward system does not take into account the remaining time to the destination, so there is no point for the smartcab to take that into account in choosing actions.</p>
+<p>Therefore, in the end, I chose these states for the Q-learning problem: waypoint, inputs['light'], inputs['oncoming'] and inputs['left'].</p>
 
 </div>
 </div>
@@ -16228,6 +16229,7 @@ MzMzM7My+X+SFE0D8eKEUAAAAABJRU5ErkJggg==
 -- right : 0.94
 -- left : -10.20</li>
 </ol>
+<p>The sub-optimal policies exist because of lack of enough exploration. If the states with sub-optimal actions happen more often and the smartcab gets rewarded more times for them, the reward for the optimal policy would increase and therefore it will be chosen when exploiting the learned policies.</p>
 
 </div>
 </div>
@@ -16258,7 +16260,7 @@ MzMzM7My+X+SFE0D8eKEUAAAAABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer:</strong> One issue about the smartcab itself is that we do not have enough information about the light at a crossroad for more than one step ahead, unless we have a method to predict it, but we don't have it here so we don't know if the smartcab should move or not when it gets there so we don't have enough information about the future. About the environment, we do not have enough information about the existence of the other cars at a crossroad and the direction they intend to move when the smartcab gets there, so looking more than one step forward will not have consistent optimal policy by nature and will not help in this problem.</p>
+<p><strong>Answer:</strong> One issue about the smartcab itself is that we do not have enough information about the light at a crossroad for more than one step ahead, unless we have a method to predict it, but we don't have it here so we don't know if the smartcab should move or not when it gets there so we don't have enough information about the future. About the environment, we do not have enough information about the existence of the other cars at a crossroad and the direction they intend to move when the smartcab gets there. In general, the environment, future states and the route to get to the destination (due to changing start and end) is random in this problem, so looking more than one step forward will not have consistent optimal policy by nature and will not help.</p>
 
 </div>
 </div>
